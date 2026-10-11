@@ -16,6 +16,7 @@ O Caixa tenta resolver uma pergunta prática: **depois de pagar as contas que j�
 - Importação de CSV com identificação de colunas comuns, detecção de duplicatas e modelo para baixar.
 - Exportação de CSV e cópia de segurança JSON, com opção de restaurar a cópia.
 - Lembrete de cobrança copiável para revisar antes de enviar.
+- Resumo financeiro agregado que você pode copiar e colar manualmente no Claude; nada é enviado pelo Caixa.
 - Interface em português adaptada para celular e computador.
 
 ## Abrir
@@ -40,7 +41,7 @@ Datas podem estar em `AAAA-MM-DD` ou `DD/MM/AAAA`. Revise as linhas no Caixa dep
 
 O Caixa é um organizador de registros pessoais. Não calcula impostos, não substitui contabilidade, não verifica saldo bancário e não gera documentos fiscais. A projeção usa somente os lançamentos que a pessoa cadastrou. A demonstração pública vem com dados fictícios.
 
-Esta versão ainda não chama a API do Claude. Se a comunidade validar a necessidade de resumos automáticos, a integração deverá usar um endpoint seguro no servidor, consentimento explícito e limites de custo. Chaves de API não devem ser colocadas no código do navegador.
+Esta versão não chama a API do Claude. O relatório prepara apenas totais agregados para você copiar e colar manualmente em uma conversa do Claude; nomes, observações e descrições dos clientes ficam de fora. Se a comunidade validar a necessidade de resumos automáticos, a integração deverá usar um endpoint seguro no servidor, consentimento explícito e limites de custo. Chaves de API não devem ser colocadas no código do navegador.
 
 ## Próximos passos do projeto
 
