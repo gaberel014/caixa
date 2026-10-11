@@ -3,32 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#f6f7f4" />
-    <meta name="description" content="Um jeito simples e privado de acompanhar o caixa do seu negócio." />
-    <title>Caixa — seu negócio, em dia</title>
+    <meta name="theme-color" content="#f4f6f1" />
+    <meta name="description" content="Organize clientes, recebimentos e despesas do seu negócio em um só lugar." />
+    <title>Caixa — gestão simples para quem trabalha por conta</title>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="features.css" />
     <script src="app.js" defer></script>
   </head>
   <body>
     <div class="app-shell">
       <aside class="sidebar" id="sidebar">
-        <a class="brand" href="#inicio" aria-label="Caixa, início">
-          <span class="brand-mark"><span></span><span></span><span></span></span>
-          <span>caixa<span class="brand-dot">.</span></span>
-        </a>
+        <a class="brand" href="#inicio" aria-label="Caixa, início"><span class="brand-mark"><i></i><i></i><i></i></span><span>caixa<span class="brand-dot">.</span></span></a>
         <div class="workspace-label">SEU NEGÓCIO</div>
         <nav class="main-nav" aria-label="Navegação principal">
           <a class="nav-item active" href="#inicio" data-view="inicio"><span class="nav-icon">⌂</span>Visão geral</a>
-          <a class="nav-item" href="#movimentacoes" data-view="movimentacoes"><span class="nav-icon">↕</span>Movimentações</a>
+          <a class="nav-item" href="#lancamentos" data-view="lancamentos"><span class="nav-icon">↕</span>Lançamentos</a>
+          <a class="nav-item" href="#clientes" data-view="clientes"><span class="nav-icon">♙</span>Clientes</a>
+          <a class="nav-item" href="#servicos" data-view="servicos"><span class="nav-icon">✳</span>Serviços</a>
+          <a class="nav-item" href="#planejamento" data-view="planejamento"><span class="nav-icon">◷</span>Fluxo futuro</a>
+          <a class="nav-item" href="#relatorios" data-view="relatorios"><span class="nav-icon">▥</span>Relatórios</a>
         </nav>
         <div class="sidebar-bottom">
-          <div class="privacy-card">
-            <span class="privacy-icon">◈</span>
-            <div><strong>Seu dinheiro é seu.</strong><p>Os dados ficam neste dispositivo.</p></div>
-          </div>
-          <button class="profile-button" type="button" aria-label="Perfil local">
-            <span class="avatar">M</span><span class="profile-copy"><strong>Meu negócio</strong><small>Espaço local</small></span><span class="profile-menu">···</span>
-          </button>
+          <div class="privacy-card"><span class="privacy-icon">◈</span><div><strong>Seu dinheiro é seu.</strong><p>Dados guardados neste navegador.</p></div></div>
+          <button class="profile-button" type="button" aria-label="Perfil local"><span class="avatar">M</span><span class="profile-copy"><strong>Meu negócio</strong><small>Espaço local</small></span><span class="profile-menu">···</span></button>
         </div>
       </aside>
 
@@ -36,83 +33,85 @@
         <header class="topbar">
           <button class="mobile-menu" id="mobile-menu" type="button" aria-label="Abrir menu">☰</button>
           <div class="breadcrumb"><span>Meu negócio</span><span class="crumb-slash">/</span><strong id="crumb-title">Visão geral</strong></div>
-          <div class="top-actions"><button class="icon-button" id="export-button" type="button" title="Exportar movimentações em CSV" aria-label="Exportar CSV">⇩</button><button class="button button-primary top-add" id="top-add" type="button"><span>＋</span> Nova movimentação</button></div>
+          <div class="top-actions">
+            <button class="icon-button" id="import-button" type="button" title="Importar CSV" aria-label="Importar CSV">⇧</button>
+            <input id="csv-file" type="file" accept=".csv,text/csv" hidden />
+            <button class="icon-button" id="backup-button" type="button" title="Baixar backup JSON" aria-label="Baixar backup">⤓</button>
+            <button class="icon-button" id="restore-button" type="button" title="Restaurar backup JSON" aria-label="Restaurar backup">↧</button>
+            <input id="backup-file" type="file" accept=".json,application/json" hidden />
+            <button class="button button-primary top-add" id="top-add" type="button"><span>＋</span> Novo lançamento</button>
+          </div>
         </header>
 
         <section class="page-view" id="overview-view">
           <div class="page-heading">
-            <div><p class="eyebrow" id="today-label">SEU RESUMO</p><h1>Bom dia. <span class="heading-spark">✳</span></h1><p class="subheading">Veja como está o caixa do seu negócio.</p></div>
-            <button class="button button-primary heading-add" id="heading-add" type="button"><span>＋</span> Nova movimentação</button>
+            <div><p class="eyebrow" id="today-label">SEU RESUMO</p><h1>Seu negócio, em dia. <span class="heading-spark">✳</span></h1><p class="subheading">Uma visão simples do que entrou, saiu e está por vir.</p></div>
+            <button class="button button-primary heading-add" id="heading-add" type="button"><span>＋</span> Novo lançamento</button>
           </div>
-
           <div class="summary-grid">
-            <article class="summary-card balance-card">
-              <div class="card-label">Saldo registrado <span class="info-dot" title="Entradas recebidas menos saídas pagas, no histórico deste dispositivo.">i</span></div>
-              <div class="metric" id="balance-value">R$ 0,00</div>
-              <div class="metric-foot"><span class="metric-badge">●</span><span id="balance-foot">Atualizado agora</span></div>
-              <div class="balance-decoration"><i></i><i></i><i></i><i></i><i></i></div>
-            </article>
-            <article class="summary-card">
-              <div class="card-label">Entradas do mês <span class="metric-icon income-icon">↗</span></div>
-              <div class="metric" id="income-value">R$ 0,00</div>
-              <div class="metric-foot"><span class="muted-dot">●</span><span id="income-foot">Recebidas neste mês</span></div>
-            </article>
-            <article class="summary-card">
-              <div class="card-label">Saídas do mês <span class="metric-icon expense-icon">↙</span></div>
-              <div class="metric" id="expense-value">R$ 0,00</div>
-              <div class="metric-foot"><span class="muted-dot">●</span><span id="expense-foot">Pagas neste mês</span></div>
-            </article>
-            <article class="summary-card due-card">
-              <div class="card-label">A receber <span class="metric-icon due-icon">◷</span></div>
-              <div class="metric" id="receivable-value">R$ 0,00</div>
-              <div class="metric-foot"><span class="muted-dot">●</span><span id="receivable-foot">Em aberto</span></div>
-            </article>
+            <article class="summary-card balance-card"><div class="card-label">Saldo confirmado <span class="info-dot" title="Entradas recebidas menos despesas pagas no seu histórico.">i</span></div><div class="metric" id="balance-value">R$ 0,00</div><div class="metric-foot"><span class="metric-badge">●</span><span>Com base nos lançamentos concluídos</span></div><div class="balance-decoration"><i></i><i></i><i></i><i></i></div></article>
+            <article class="summary-card"><div class="card-label">Recebido este mês <span class="metric-icon income-icon">↗</span></div><div class="metric" id="income-value">R$ 0,00</div><div class="metric-foot"><span class="muted-dot">●</span><span id="income-foot">Entradas confirmadas</span></div></article>
+            <article class="summary-card"><div class="card-label">Pago este mês <span class="metric-icon expense-icon">↙</span></div><div class="metric" id="expense-value">R$ 0,00</div><div class="metric-foot"><span class="muted-dot">●</span><span id="expense-foot">Despesas confirmadas</span></div></article>
+            <article class="summary-card due-card"><div class="card-label">A receber <span class="metric-icon due-icon">◷</span></div><div class="metric" id="receivable-value">R$ 0,00</div><div class="metric-foot"><span class="muted-dot">●</span><span id="receivable-foot">Em aberto</span></div></article>
           </div>
-
-          <div class="content-grid">
-            <section class="panel chart-panel">
-              <div class="panel-heading"><div><h2>Seu ritmo</h2><p>Entradas e saídas nos últimos 6 meses</p></div><span class="chart-period">6 meses <span>⌄</span></span></div>
-              <div class="chart-legend"><span><i class="legend-income"></i>Entradas</span><span><i class="legend-expense"></i>Saídas</span></div>
-              <div class="chart" id="cashflow-chart" aria-label="Gráfico de entradas e saídas"></div>
-            </section>
-            <section class="panel attention-panel">
-              <div class="panel-heading"><div><h2>Fique de olho</h2><p>O que precisa da sua atenção</p></div><span class="attention-spark">✳</span></div>
-              <div class="attention-content" id="attention-content"></div>
-            </section>
+          <div class="overview-grid">
+            <section class="panel chart-panel"><div class="panel-heading"><div><h2>Ritmo do caixa</h2><p>Entradas e despesas confirmadas · últimos 6 meses</p></div><a class="panel-link" href="#relatorios" data-view="relatorios">Ver relatórios →</a></div><div class="chart-legend"><span><i class="legend-income"></i>Entradas</span><span><i class="legend-expense"></i>Despesas</span></div><div class="chart" id="cashflow-chart" aria-label="Gráfico de entradas e despesas"></div></section>
+            <section class="panel attention-panel"><div class="panel-heading"><div><h2>Precisa de atenção</h2><p>Contas atrasadas e próximas</p></div><span class="attention-spark">✳</span></div><div class="attention-content" id="attention-content"></div></section>
           </div>
-
-          <section class="panel transactions-panel">
-            <div class="panel-heading transaction-heading"><div><h2>Movimentações recentes</h2><p>O que aconteceu no seu caixa</p></div><a href="#movimentacoes" class="text-link" data-view="movimentacoes">Ver todas <span>→</span></a></div>
-            <div class="table-wrap"><table><thead><tr><th>DESCRIÇÃO</th><th>CATEGORIA</th><th>DATA</th><th>STATUS</th><th class="amount-col">VALOR</th><th></th></tr></thead><tbody id="recent-rows"></tbody></table></div>
-            <div class="empty-state hidden" id="recent-empty"><span class="empty-illustration">↗</span><strong>Seu caixa começa com um primeiro registro</strong><p>Adicione uma entrada ou saída e acompanhe tudo por aqui.</p><button class="button button-secondary" id="empty-add">＋ Adicionar movimentação</button></div>
-          </section>
-          <footer class="app-footer"><span>Feito para deixar o dia mais leve.</span><button id="reset-demo" type="button">Restaurar dados de exemplo</button></footer>
+          <div class="overview-grid secondary-grid">
+            <section class="panel pipeline-panel"><div class="panel-heading"><div><h2>Trabalhos em andamento</h2><p>Orçamentos, entregas e valores previstos</p></div><a class="panel-link" href="#servicos" data-view="servicos">Ver serviços →</a></div><div class="pipeline-content" id="pipeline-content"></div></section>
+            <section class="panel forecast-card"><div class="panel-heading"><div><h2>Saldo projetado</h2><p>Se as contas em aberto forem pagas no prazo</p></div><span class="forecast-icon">↗</span></div><div class="forecast-metric" id="forecast-value">R$ 0,00</div><div class="forecast-note" id="forecast-note">Projeção para os próximos 30 dias</div><a class="panel-link" href="#planejamento" data-view="planejamento">Planejar o caixa →</a></section>
+          </div>
+          <section class="panel transactions-panel"><div class="panel-heading transaction-heading"><div><h2>Últimos lançamentos</h2><p>Uma atividade recente do seu negócio</p></div><a class="panel-link" href="#lancamentos" data-view="lancamentos">Ver todos →</a></div><div class="table-wrap"><table><thead><tr><th>DESCRIÇÃO</th><th>CLIENTE / CATEGORIA</th><th>VENCIMENTO</th><th>STATUS</th><th class="amount-col">VALOR</th><th></th></tr></thead><tbody id="recent-rows"></tbody></table></div><div class="empty-state hidden" id="recent-empty"><span class="empty-illustration">↗</span><strong>Comece registrando um recebimento ou uma despesa</strong><p>Seus lançamentos ajudam a enxergar o caixa e o trabalho que vem pela frente.</p><button class="button button-secondary" id="empty-add">＋ Novo lançamento</button></div></section>
+          <footer class="app-footer"><span>Caixa · Ferramenta gratuita em construção</span><button id="reset-demo" type="button">Restaurar exemplos</button></footer>
         </section>
 
         <section class="page-view hidden" id="transactions-view">
-          <div class="page-heading compact-heading"><div><p class="eyebrow">SEU NEGÓCIO</p><h1>Movimentações</h1><p class="subheading">Entradas, saídas e o que ainda está por vir.</p></div></div>
-          <section class="panel transactions-panel all-transactions-panel">
-            <div class="list-toolbar"><div class="filter-tabs" role="tablist" aria-label="Filtrar movimentações"><button class="filter-tab active" data-filter="todas" role="tab">Todas <span id="count-all">0</span></button><button class="filter-tab" data-filter="entrada" role="tab">Entradas</button><button class="filter-tab" data-filter="saida" role="tab">Saídas</button></div><label class="search-box"><span>⌕</span><input id="search-input" type="search" placeholder="Buscar movimentação" aria-label="Buscar movimentação" /></label></div>
-            <div class="table-wrap"><table><thead><tr><th>DESCRIÇÃO</th><th>CATEGORIA</th><th>DATA</th><th>STATUS</th><th class="amount-col">VALOR</th><th></th></tr></thead><tbody id="all-rows"></tbody></table></div>
-            <div class="empty-state hidden" id="all-empty"><span class="empty-illustration">⌕</span><strong>Nenhuma movimentação por aqui</strong><p>Experimente mudar a busca ou adicione um novo registro.</p><button class="button button-secondary" id="list-add">＋ Nova movimentação</button></div>
-          </section>
-          <footer class="app-footer"><span>Seus dados ficam salvos neste navegador.</span><button id="reset-demo-list" type="button">Restaurar dados de exemplo</button></footer>
+          <div class="page-heading compact-heading"><div><p class="eyebrow">CAIXA DO NEGÓCIO</p><h1>Lançamentos</h1><p class="subheading">Recebimentos, despesas e pagamentos que ainda estão em aberto.</p></div><button class="button button-primary heading-add" id="list-add" type="button"><span>＋</span> Novo lançamento</button></div>
+          <section class="panel transactions-panel all-transactions-panel"><div class="list-toolbar"><div class="filter-tabs" role="tablist" aria-label="Filtrar lançamentos"><button class="filter-tab active" data-filter="todos" role="tab">Todos <span id="count-all">0</span></button><button class="filter-tab" data-filter="entrada" role="tab">Recebimentos</button><button class="filter-tab" data-filter="saida" role="tab">Despesas</button><button class="filter-tab" data-filter="abertos" role="tab">Em aberto</button></div><label class="search-box"><span>⌕</span><input id="search-input" type="search" placeholder="Buscar cliente ou lançamento" aria-label="Buscar cliente ou lançamento" /></label></div><div class="table-wrap"><table><thead><tr><th>DESCRIÇÃO</th><th>CLIENTE / CATEGORIA</th><th>VENCIMENTO</th><th>STATUS</th><th class="amount-col">VALOR</th><th>AÇÕES</th></tr></thead><tbody id="all-rows"></tbody></table></div><div class="empty-state hidden" id="all-empty"><span class="empty-illustration">⌕</span><strong>Nenhum lançamento encontrado</strong><p>Mude a busca ou o filtro, ou registre uma nova movimentação.</p><button class="button button-secondary" id="list-empty-add">＋ Novo lançamento</button></div></section>
+          <footer class="app-footer"><span>Importe um CSV bancário ou registre as movimentações manualmente.</span><button id="csv-template" type="button">Baixar modelo CSV</button></footer>
+        </section>
+
+        <section class="page-view hidden" id="clients-view">
+          <div class="page-heading compact-heading"><div><p class="eyebrow">RELACIONAMENTO</p><h1>Clientes e serviços</h1><p class="subheading">Veja quem contratou seu trabalho e o que ainda falta receber.</p></div><button class="button button-primary heading-add" id="client-add" type="button"><span>＋</span> Novo cliente</button></div>
+          <div class="client-summary-row"><article class="mini-stat"><span>Clientes cadastrados</span><strong id="client-count">0</strong></article><article class="mini-stat"><span>Clientes com valores em aberto</span><strong id="client-open-count">0</strong></article><article class="mini-stat"><span>Total a receber</span><strong id="client-open-total">R$ 0,00</strong></article></div>
+          <section class="panel clients-panel"><div class="panel-heading transaction-heading"><div><h2>Seus clientes</h2><p>Cadastro e recebimentos associados</p></div><label class="search-box"><span>⌕</span><input id="client-search" type="search" placeholder="Buscar cliente" aria-label="Buscar cliente" /></label></div><div class="client-grid" id="client-grid"></div><div class="empty-state hidden" id="clients-empty"><span class="empty-illustration">♙</span><strong>Organize seus clientes por aqui</strong><p>Associe recebimentos a clientes e saiba onde estão os serviços em aberto.</p><button class="button button-secondary" id="client-empty-add">＋ Cadastrar cliente</button></div></section>
+          <footer class="app-footer"><span>Os dados ficam somente neste navegador.</span><button id="client-export" type="button">Exportar lista</button></footer>
+        </section>
+
+        <section class="page-view hidden" id="services-view">
+          <div class="page-heading compact-heading"><div><p class="eyebrow">TRABALHO</p><h1>Serviços e projetos</h1><p class="subheading">Acompanhe o que foi combinado, o que está em andamento e o que já foi entregue.</p></div><button class="button button-primary heading-add" id="service-add" type="button"><span>＋</span> Novo serviço</button></div>
+          <div class="service-summary-row"><article class="mini-stat"><span>Orçamentos em aberto</span><strong id="service-quotes">0</strong></article><article class="mini-stat"><span>Em andamento</span><strong id="service-active">0</strong></article><article class="mini-stat"><span>Valor contratado</span><strong id="service-value">R$ 0,00</strong></article></div>
+          <section class="panel services-panel"><div class="panel-heading transaction-heading"><div><h2>Seu trabalho</h2><p>Organize cada serviço e acompanhe os recebimentos associados</p></div><label class="search-box"><span>⌕</span><input id="service-search" type="search" placeholder="Buscar serviço ou cliente" aria-label="Buscar serviço ou cliente" /></label></div><div class="service-grid" id="service-grid"></div><div class="empty-state hidden" id="services-empty"><span class="empty-illustration">✳</span><strong>Registre o próximo trabalho antes de começar</strong><p>Você pode acompanhar o valor combinado, prazo e pagamentos ligados ao serviço.</p><button class="button button-secondary" id="service-empty-add">＋ Novo serviço</button></div></section>
+          <footer class="app-footer"><span>O valor combinado não cria um lançamento automaticamente.</span><button id="service-add-footer" type="button">＋ Cadastrar serviço</button></footer>
+        </section>
+
+        <section class="page-view hidden" id="planning-view">
+          <div class="page-heading compact-heading"><div><p class="eyebrow">PLANEJAMENTO</p><h1>Fluxo futuro</h1><p class="subheading">Uma estimativa simples com base nos lançamentos que você cadastrou.</p></div><button class="button button-primary heading-add" id="plan-add" type="button"><span>＋</span> Agendar conta</button></div>
+          <div class="horizon-tabs" role="group" aria-label="Horizonte da projeção"><button class="horizon-tab active" data-days="30">30 dias</button><button class="horizon-tab" data-days="60">60 dias</button><button class="horizon-tab" data-days="90">90 dias</button></div>
+          <div class="plan-summary-grid"><article class="plan-summary"><span>Saldo confirmado hoje</span><strong id="plan-current">R$ 0,00</strong><small>Entradas recebidas menos despesas pagas</small></article><article class="plan-summary"><span>Entradas previstas</span><strong class="positive" id="plan-incoming">R$ 0,00</strong><small id="plan-incoming-count">0 recebimentos em aberto</small></article><article class="plan-summary"><span>Despesas previstas</span><strong class="negative" id="plan-outgoing">R$ 0,00</strong><small id="plan-outgoing-count">0 despesas em aberto</small></article><article class="plan-summary plan-total"><span>Saldo projetado</span><strong id="plan-projected">R$ 0,00</strong><small id="plan-horizon-note">Ao final dos próximos 30 dias</small></article></div>
+          <section class="panel plan-panel"><div class="panel-heading transaction-heading"><div><h2>O que vem pela frente</h2><p>Contas em aberto dentro do período selecionado</p></div></div><div class="timeline" id="timeline"></div><div class="empty-state hidden" id="timeline-empty"><span class="empty-illustration">◷</span><strong>Sem contas previstas neste período</strong><p>Adicione recebimentos ou despesas futuras para acompanhar a projeção.</p></div></section>
+          <p class="disclaimer">A projeção considera apenas os lançamentos registrados. Ela não consulta bancos nem prevê novos contratos ou despesas.</p>
+        </section>
+
+        <section class="page-view hidden" id="reports-view">
+          <div class="page-heading compact-heading"><div><p class="eyebrow">ANÁLISE DO NEGÓCIO</p><h1>Relatórios</h1><p class="subheading">Acompanhe as movimentações confirmadas e distribua os gastos por categoria.</p></div><button class="button button-secondary" id="report-csv">⇩ Exportar CSV</button></div>
+          <div class="report-filter"><label for="report-month">Período</label><select id="report-month" aria-label="Escolher período"></select></div>
+          <div class="report-summary-grid"><article class="summary-card"><div class="card-label">Recebido no período</div><div class="metric" id="report-income">R$ 0,00</div><div class="metric-foot"><span class="muted-dot">●</span><span id="report-income-count">0 recebimentos</span></div></article><article class="summary-card"><div class="card-label">Despesas pagas</div><div class="metric" id="report-expense">R$ 0,00</div><div class="metric-foot"><span class="muted-dot">●</span><span id="report-expense-count">0 despesas</span></div></article><article class="summary-card"><div class="card-label">Resultado do período</div><div class="metric" id="report-net">R$ 0,00</div><div class="metric-foot"><span class="muted-dot">●</span><span>Recebido menos pago</span></div></article></div>
+          <div class="overview-grid report-grid"><section class="panel category-panel"><div class="panel-heading"><div><h2>Despesas por categoria</h2><p>Despesas concluídas no período</p></div></div><div class="category-list" id="category-list"></div></section><section class="panel report-note"><span class="report-note-icon">✳</span><h2>O que esses números mostram</h2><p>Este relatório soma os lançamentos concluídos que você registrou. Use o CSV para conferir os dados com sua planilha ou contador.</p><button class="button button-secondary" id="report-backup">Baixar cópia de segurança</button></section></div>
+          <footer class="app-footer"><span>Caixa organiza registros; não substitui contabilidade.</span><button id="report-import">Importar CSV</button></footer>
         </section>
       </main>
     </div>
-    <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <dialog class="modal" id="transaction-modal">
-      <form id="transaction-form" method="dialog">
-        <div class="modal-heading"><div><p class="eyebrow">NO SEU CAIXA</p><h2>Nova movimentação</h2></div><button class="close-button" type="button" id="close-modal" aria-label="Fechar">×</button></div>
-        <div class="type-switch" role="group" aria-label="Tipo de movimentação"><button class="type-option selected" type="button" data-type="entrada"><span>↗</span>Entrada</button><button class="type-option" type="button" data-type="saida"><span>↙</span>Saída</button></div>
-        <label class="field-label">O que é?<input id="description" name="description" maxlength="64" placeholder="Ex.: Projeto de identidade visual" required /></label>
-        <div class="field-row"><label class="field-label">Valor (R$)<input id="amount" name="amount" type="number" min="0.01" step="0.01" placeholder="0,00" required /></label><label class="field-label">Data<input id="date" name="date" type="date" required /></label></div>
-        <div class="field-row"><label class="field-label">Categoria<select id="category" name="category"></select></label><label class="field-label">Status<select id="status" name="status"><option value="pendente">Em aberto</option><option value="concluida">Recebida / paga</option></select></label></div>
-        <div class="modal-actions"><button class="button button-secondary" type="button" id="cancel-modal">Cancelar</button><button class="button button-primary" type="submit">Salvar movimentação <span>→</span></button></div>
-      </form>
-    </dialog>
-    <dialog class="confirm-modal" id="confirm-modal"><div class="confirm-content"><span class="confirm-icon">↻</span><h2>Voltar ao começo?</h2><p>Isso restaura os exemplos e apaga os registros salvos neste navegador.</p><div class="modal-actions"><button class="button button-secondary" id="cancel-reset" type="button">Manter meus dados</button><button class="button button-primary" id="confirm-reset" type="button">Restaurar exemplos</button></div></div></dialog>
+    <dialog class="modal" id="transaction-modal"><form id="transaction-form" method="dialog"><div class="modal-heading"><div><p class="eyebrow">NO SEU CAIXA</p><h2 id="transaction-modal-title">Novo lançamento</h2></div><button class="close-button" type="button" data-close="transaction-modal" aria-label="Fechar">×</button></div><div class="type-switch" role="group" aria-label="Tipo do lançamento"><button class="type-option selected" type="button" data-type="entrada"><span>↗</span>Recebimento</button><button class="type-option" type="button" data-type="saida"><span>↙</span>Despesa</button></div><label class="field-label">Descrição<input id="description" name="description" maxlength="80" placeholder="Ex.: Projeto de identidade visual" required /></label><div class="field-row"><label class="field-label">Valor (R$)<input id="amount" name="amount" type="number" min="0.01" step="0.01" placeholder="0,00" required /></label><label class="field-label">Vencimento<input id="date" name="date" type="date" required /></label></div><div class="field-row"><label class="field-label">Categoria<select id="category" name="category"></select></label><label class="field-label">Cliente<select id="client-id" name="clientId"><option value="">Sem cliente associado</option></select></label></div><label class="field-label">Serviço / projeto <span class="optional-label">opcional</span><select id="project-id" name="projectId"><option value="">Sem serviço associado</option></select></label><label class="field-label">Observação <span class="optional-label">opcional</span><textarea id="notes" name="notes" maxlength="220" placeholder="Detalhes úteis para você"></textarea></label><label class="check-row"><input id="status" name="status" type="checkbox" /><span>Já foi recebido / pago</span></label><div class="modal-actions"><button class="button button-secondary" type="button" data-close="transaction-modal">Cancelar</button><button class="button button-primary" type="submit">Salvar lançamento <span>→</span></button></div></form></dialog>
+
+    <dialog class="modal" id="client-modal"><form id="client-form" method="dialog"><div class="modal-heading"><div><p class="eyebrow">RELACIONAMENTO</p><h2 id="client-modal-title">Novo cliente</h2></div><button class="close-button" type="button" data-close="client-modal" aria-label="Fechar">×</button></div><label class="field-label">Nome do cliente<input id="client-name" name="name" maxlength="70" placeholder="Ex.: Estúdio Nove" required /></label><div class="field-row"><label class="field-label">E-mail <span class="optional-label">opcional</span><input id="client-email" name="email" type="email" maxlength="100" placeholder="contato@exemplo.com" /></label><label class="field-label">Telefone <span class="optional-label">opcional</span><input id="client-phone" name="phone" type="tel" maxlength="30" placeholder="(11) 99999-9999" /></label></div><label class="field-label">Observações <span class="optional-label">opcional</span><textarea id="client-notes" name="notes" maxlength="220" placeholder="Preferências, combinado ou próximo passo"></textarea></label><div class="modal-actions"><button class="button button-secondary" type="button" data-close="client-modal">Cancelar</button><button class="button button-primary" type="submit">Salvar cliente <span>→</span></button></div></form></dialog>
+
+    <dialog class="modal" id="service-modal"><form id="service-form" method="dialog"><div class="modal-heading"><div><p class="eyebrow">TRABALHO</p><h2 id="service-modal-title">Novo serviço</h2></div><button class="close-button" type="button" data-close="service-modal" aria-label="Fechar">×</button></div><label class="field-label">Nome do serviço<input id="service-title" name="title" maxlength="80" placeholder="Ex.: Site institucional" required /></label><div class="field-row"><label class="field-label">Cliente<select id="service-client" name="clientId" required></select></label><label class="field-label">Valor combinado (R$)<input id="service-amount" name="amount" type="number" min="0" step="0.01" placeholder="0,00" required /></label></div><div class="field-row"><label class="field-label">Prazo combinado<input id="service-date" name="date" type="date" required /></label><label class="field-label">Etapa<select id="service-status" name="status"><option value="orcamento">Orçamento</option><option value="andamento">Em andamento</option><option value="concluido">Entregue</option><option value="cancelado">Cancelado</option></select></label></div><label class="field-label">Detalhes <span class="optional-label">opcional</span><textarea id="service-notes" name="notes" maxlength="220" placeholder="Escopo, parcelas ou próximos passos"></textarea></label><div class="modal-actions"><button class="button button-secondary" type="button" data-close="service-modal">Cancelar</button><button class="button button-primary" type="submit">Salvar serviço <span>→</span></button></div></form></dialog>
+
+    <dialog class="confirm-modal" id="confirm-modal"><div class="confirm-content"><span class="confirm-icon">↻</span><h2>Restaurar exemplos?</h2><p>Isso apaga os dados deste navegador e recoloca os lançamentos e clientes demonstrativos.</p><div class="modal-actions"><button class="button button-secondary" id="cancel-reset" type="button">Manter meus dados</button><button class="button button-primary" id="confirm-reset" type="button">Restaurar exemplos</button></div></div></dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
   </body>
 </html>
 
