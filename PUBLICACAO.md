@@ -1,14 +1,16 @@
 # Site, domínio e e-mail sem VPS
 
-O Caixa é um site estático. A demonstração não precisa de VPS: não tem servidor, banco de dados ou chave de API.
+O Caixa é um protótipo estático. A demonstração não precisa de VPS: não tem servidor, banco de dados ou chave de API.
 
-## Hospedagem gratuita
+## Demonstração pública
 
-O GitHub Pages publica os arquivos deste repositório, que é público, sem custo de hospedagem. O plano grátis aceita domínio próprio em repositórios públicos. Para publicar, mantenha o Pages configurado na branch `main`, pasta `/ (root)`.
+O GitHub Pages está sendo usado para apresentar o projeto open source e o protótipo local. Ele aceita domínio próprio em repositórios públicos do plano grátis. Para usar a URL atual, mantenha Pages configurado na branch `main`, pasta `/ (root)`.
 
 Site atual: <https://gaberel014.github.io/caixa/>
 
-A página inicial apresenta o produto; `app.html` abre a demonstração. Quando houver um domínio da equipe, conecte-o em **Settings → Pages → Custom domain**. O site pode continuar hospedado no GitHub Pages.
+A página inicial apresenta o produto; `app.html?v=3` abre a demonstração atualizada. Um domínio próprio pode ser conectado em **Settings → Pages → Custom domain** para a fase de protótipo.
+
+GitHub diz que Pages não é hospedagem grátis permitida para operar uma empresa online ou um SaaS comercial. Antes de oferecer o Caixa como serviço comercial ou coletar dados de clientes online, mova o site para um host que permita esse uso. Cloudflare Pages serve ativos estáticos sem cobrança por pedido; Pages Functions usam a cota do Workers Free, atualmente até 100.000 pedidos por dia. Uma integração com a API do Claude teria custo de API separado.
 
 ## Domínio `.com.br`
 
